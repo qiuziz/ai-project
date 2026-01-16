@@ -1,0 +1,50 @@
+name: Release Plugin Version
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+      
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+      
+      - name: Build plugin version
+        run: pnpm run build:plugin
+      
+      - name: Prepare release assets
+        run: |
+          # Create a zip archive of the plugin build
+          cd dist-plugin
+          zip -r plugin-release.zip .
+          cd ..
+      
+      - name: Create GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "dist-plugin/plugin-release.zip"
+          draft: false
+          prerelease: false
+          generateReleaseNotes: true
+          token: ${{ secrets.GITHUB_TOKEN }}
