@@ -9,7 +9,7 @@ interface IconProps {
 const Icon: React.FC<IconProps> = ({ icon, size = 24, className = '' }) => {
   // 如果是React节点，直接渲染
   if (React.isValidElement(icon)) {
-    return React.cloneElement(icon as React.ReactElement, {
+    return React.cloneElement(icon as React.ReactElement<React.HTMLAttributes<HTMLElement>>, {
       className: `${className} custom-icon-svg`,
       style: { fontSize: `${size}px`, width: `${size}px`, height: `${size}px` },
     });
