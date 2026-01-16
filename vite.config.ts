@@ -7,6 +7,8 @@ export default defineConfig(({ mode, command }) => {
   const isPluginMode = env.BUILD_MODE === 'plugin' || command === 'plugin'
 
   return {
+    // GitHub Pages的base路径配置
+    base: '/ai-project/',
     plugins: [
       react({
         babel: {
